@@ -144,7 +144,37 @@ He tries to tell the person on the other end that he really needs this, that he�
 
 He tries to tell the person on the other end that he really needs this, that he’s been sleeping in his car for months and doesn’t feel safe anywhere else, but it doesn’t change anything. 
 
-[[Next-&gt;Merge8]]</tw-passagedata></tw-storydata>
+[[Next-&gt;Merge8]]</tw-passagedata>
+<script>
+(function() {
+    console.log("Twine click tracker initializing...");
+    
+    // Use event delegation - listen on document, not individual links
+    document.addEventListener('click', function(event) {
+        // Check if the clicked element is or is inside a tw-link
+        var twLink = event.target.closest('tw-link');
+        
+        if (twLink) {
+            var linkText = twLink.textContent.trim();
+            console.log("USER CLICKED: " + linkText);
+            
+            // Send message to parent window (Qualtrics)
+            if (window.parent && window.parent !== window) {
+                console.log("Sending to parent window");
+                window.parent.postMessage({
+                    type: 'twine-click',
+                    choice: linkText
+                }, '*');
+            } else {
+                console.log("No parent window - running standalone");
+            }
+        }
+    }, true); // 'true' = capture phase, catches events early
+    
+    console.log("Twine click tracker ready!");
+})();
+</script>
+</tw-storydata>
 <script title="Twine engine code" data-main="harlowe">(function(){"use strict";
 var require,define;!function(){var e={},r={};require=function(i){var n=e[i];return n&&(r[i]=n[1].apply(void 0,n[0].map(require)),e[i]=void 0),r[i]},(define=function(r,i,n){if("function"==typeof r)return r();e[r]=[i,n]}).amd=!0}();/*!
  * https://github.com/paulmillr/es6-shim
